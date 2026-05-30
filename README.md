@@ -391,7 +391,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 👨‍💻 Developer
 
-**Joshnavi Seelam**
+**Naga Lakshmi Kuppala**
 - Email: nagalakshmikuppalampc2020@gmail.com
 - GitHub: [(https://github.com/naga78nn)]
 
