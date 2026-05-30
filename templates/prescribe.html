@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Write Prescription</title>
+
+  <style>
+    body {
+      font-family: "Segoe UI", Arial, sans-serif;
+      background: linear-gradient(to right, #f0fdfa, #ecfeff);
+      padding: 0;
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* HEADER */
+    .header {
+      background: #0f766e;
+      color: white;
+      padding: 15px 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .header h1 {
+      margin: 0;
+      font-size: 24px;
+    }
+    
+    .back-btn {
+      background: #6b7280;
+      color: white;
+      padding: 8px 16px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      text-decoration: none;
+      font-size: 14px;
+    }
+    
+    .back-btn:hover {
+      background: #4b5563;
+    }
+
+    /* MAIN CONTENT */
+    main {
+      flex: 1;
+      padding: 20px;
+    }
+
+    /* FOOTER */
+    footer {
+      background: #0f766e;
+      color: white;
+      text-align: center;
+      padding: 10px 20px;
+      font-size: 12px;
+    }
+
+    @media (max-width: 768px) {
+      body {
+        padding: 10px;
+      }
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 20px auto;
+      background: #ffffff;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+    }
+
+    h2 {
+      text-align: center;
+      color: #0f766e;
+      margin-bottom: 15px;
+      font-size: 26px;
+    }
+
+    .patient-info {
+      background: #f0fdfa;
+      padding: 15px;
+      border-left: 6px solid #0f766e;
+      margin-bottom: 20px;
+      border-radius: 6px;
+      font-size: 15px;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    label {
+      font-weight: 600;
+      display: block;
+      margin-bottom: 8px;
+      color: #374151;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      padding: 12px;
+      border-radius: 8px;
+      border: 2px solid #e5e7eb;
+      font-size: 14px;
+      transition: border-color 0.3s ease;
+      box-sizing: border-box;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      outline: none;
+      border-color: #0f766e;
+      box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.1);
+    }
+
+    .medications-section {
+      margin-top: 20px;
+    }
+
+    .medications-section h3 {
+      color: #0f766e;
+      margin-bottom: 15px;
+      font-size: 18px;
+    }
+
+    .medicine-row {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr 1fr auto;
+      gap: 15px;
+      align-items: end;
+      margin-bottom: 12px;
+      padding: 12px;
+      background: #f9fafb;
+      border-radius: 8px;
+      border: 1px solid #e5e7eb;
+    }
+
+    .medicine-row:hover {
+      background: #f0fdfa;
+      border-color: #0f766e;
+    }
+
+    .field-group {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .field-group label {
+      font-size: 12px;
+      font-weight: 500;
+      margin-bottom: 5px;
+      color: #6b7280;
+    }
+
+    .add-btn {
+      background: #22c55e;
+      color: white;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 8px;
+      margin: 20px 0;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 600;
+      transition: background-color 0.3s ease;
+    }
+
+    .add-btn:hover {
+      background: #15803d;
+    }
+
+    .remove-btn {
+      background: #ef4444;
+      color: white;
+      padding: 8px 12px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 12px;
+    }
+
+    .remove-btn:hover {
+      background: #dc2626;
+    }
+
+    .submit-btn {
+      background: #0f766e;
+      color: white;
+      padding: 12px;
+      border: none;
+      border-radius: 8px;
+      width: 100%;
+      font-size: 16px;
+      font-weight: 600;
+      margin-top: 20px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .submit-btn:hover {
+      background: #0d5b52;
+    }
+
+    @media (max-width: 768px) {
+      .medicine-row {
+        grid-template-columns: 1fr;
+        gap: 10px;
+      }
+      
+      .container {
+        padding: 15px;
+        margin: 10px auto;
+      }
+      
+      .field-group label {
+        font-size: 14px;
+      }
+      
+      input, select {
+        padding: 10px;
+        font-size: 14px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- HEADER -->
+  <div class="header">
+    <h1>📝 Write Prescription</h1>
+    <a href="/doctor_dashboard" class="back-btn">← Back to Dashboard</a>
+  </div>
+
+  <!-- MAIN CONTENT -->
+  <main>
+
+<div class="container">
+
+  <h2>📝 Write Prescription</h2>
+
+  <div class="patient-info">
+    <b>Patient ID:</b> #{{ appointment.patient_id }} <br>
+    <b>Patient:</b> {{ appointment.patient_name }} <br>
+    <b>Appointment ID:</b> #{{ appointment.appointment_id }}
+  </div>
+
+  <form method="POST" action="/prescribe/{{ appointment.appointment_id }}">
+    <input type="hidden" name="appointment_id" value="{{ appointment.appointment_id }}">
+    
+    <div class="form-group">
+      <label>Diagnosis *</label>
+      <input type="text" name="diagnosis" placeholder="Enter diagnosis" required>
+    </div>
+
+    <div class="medications-section">
+      <h3>💊 Medications</h3>
+      
+      <div id="medications-container">
+        <div class="medicine-row">
+          <div class="field-group">
+            <label>Medicine Name</label>
+            <select name="medicine_name[]" onchange="toggleCustomMedicine(this)" required>
+              <option value="">Select Medicine</option>
+              <option value="Paracetamol">Paracetamol</option>
+              <option value="Ibuprofen">Ibuprofen</option>
+              <option value="Amoxicillin">Amoxicillin</option>
+              <option value="Azithromycin">Azithromycin</option>
+              <option value="Omeprazole">Omeprazole</option>
+              <option value="Metformin">Metformin</option>
+              <option value="Amlodipine">Amlodipine</option>
+              <option value="Atorvastatin">Atorvastatin</option>
+              <option value="Cetirizine">Cetirizine</option>
+              <option value="Pantoprazole">Pantoprazole</option>
+              <option value="Cough Syrup">Cough Syrup</option>
+              <option value="Vitamin D3">Vitamin D3</option>
+              <option value="Iron Tablets">Iron Tablets</option>
+              <option value="Calcium">Calcium</option>
+              <option value="Other">Other (Type below)</option>
+            </select>
+            <input type="text" name="custom_medicine_name[]" placeholder="Type medicine name" style="display:none; margin-top:5px;">
+          </div>
+          
+          <div class="field-group">
+            <label>Dosage</label>
+            <select name="dosage[]" onchange="toggleCustomDosage(this)" required>
+              <option value="">Select Dosage</option>
+              <option value="500mg">500mg</option>
+              <option value="250mg">250mg</option>
+              <option value="100mg">100mg</option>
+              <option value="50mg">50mg</option>
+              <option value="25mg">25mg</option>
+              <option value="10mg">10mg</option>
+              <option value="5mg">5mg</option>
+              <option value="1 tablet">1 tablet</option>
+              <option value="2 tablets">2 tablets</option>
+              <option value="5ml">5ml</option>
+              <option value="10ml">10ml</option>
+              <option value="Other">Other (Type below)</option>
+            </select>
+            <input type="text" name="custom_dosage[]" placeholder="Type dosage" style="display:none; margin-top:5px;">
+          </div>
+          
+          <div class="field-group">
+            <label>Frequency</label>
+            <select name="frequency[]" required>
+              <option value="">Select Frequency</option>
+              <option value="Once daily">Once daily</option>
+              <option value="Twice daily">Twice daily</option>
+              <option value="Three times daily">Three times daily</option>
+              <option value="Four times daily">Four times daily</option>
+              <option value="Before meals">Before meals</option>
+              <option value="After meals">After meals</option>
+              <option value="At bedtime">At bedtime</option>
+              <option value="As needed">As needed</option>
+            </select>
+          </div>
+          
+          <div class="field-group">
+            <label>Days</label>
+            <select name="duration_days[]" required>
+              <option value="">Select Days</option>
+              <option value="3">3 days</option>
+              <option value="5">5 days</option>
+              <option value="7">7 days</option>
+              <option value="10">10 days</option>
+              <option value="14">14 days</option>
+              <option value="21">21 days</option>
+              <option value="30">30 days</option>
+            </select>
+          </div>
+          
+          <div class="field-group">
+            <label>Quantity</label>
+            <input name="quantity[]" type="number" min="1" placeholder="Qty" required>
+          </div>
+          
+          <div class="field-group">
+            <label>&nbsp;</label>
+            <button type="button" class="remove-btn" onclick="removeRow(this)" style="display:none;">Remove</button>
+          </div>
+        </div>
+      </div>
+
+      <button type="button" class="add-btn" onclick="addMedicineRow()">➕ Add Another Medicine</button>
+    </div>
+
+    <div class="form-group">
+      <label>Additional Notes</label>
+      <textarea name="notes" rows="3" placeholder="Additional instructions or notes (optional)"></textarea>
+    </div>
+
+    <button type="submit" class="submit-btn">💾 Save Prescription</button>
+  </form>
+
+</div>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer>
+    <p style="margin: 0;">© 2026 Digital Health Care System | Built with ❤️ for healthcare</p>
+  </footer>
+
+<script>
+let medicineCount = 1;
+
+function toggleCustomMedicine(select) {
+  const customInput = select.parentNode.querySelector('input[name="custom_medicine_name[]"]');
+  if (select.value === 'Other') {
+    customInput.style.display = 'block';
+    customInput.required = true;
+    select.required = false;
+  } else {
+    customInput.style.display = 'none';
+    customInput.required = false;
+    select.required = true;
+  }
+}
+
+function toggleCustomDosage(select) {
+  const customInput = select.parentNode.querySelector('input[name="custom_dosage[]"]');
+  if (select.value === 'Other') {
+    customInput.style.display = 'block';
+    customInput.required = true;
+    select.required = false;
+  } else {
+    customInput.style.display = 'none';
+    customInput.required = false;
+    select.required = true;
+  }
+}
+
+function addMedicineRow() {
+  medicineCount++;
+  const container = document.getElementById('medications-container');
+  
+  const newRow = document.createElement('div');
+  newRow.className = 'medicine-row';
+  newRow.innerHTML = `
+    <div class="field-group">
+      <label>Medicine Name</label>
+      <select name="medicine_name[]" onchange="toggleCustomMedicine(this)" required>
+        <option value="">Select Medicine</option>
+        <option value="Paracetamol">Paracetamol</option>
+        <option value="Ibuprofen">Ibuprofen</option>
+        <option value="Amoxicillin">Amoxicillin</option>
+        <option value="Azithromycin">Azithromycin</option>
+        <option value="Omeprazole">Omeprazole</option>
+        <option value="Metformin">Metformin</option>
+        <option value="Amlodipine">Amlodipine</option>
+        <option value="Atorvastatin">Atorvastatin</option>
+        <option value="Cetirizine">Cetirizine</option>
+        <option value="Pantoprazole">Pantoprazole</option>
+        <option value="Cough Syrup">Cough Syrup</option>
+        <option value="Vitamin D3">Vitamin D3</option>
+        <option value="Iron Tablets">Iron Tablets</option>
+        <option value="Calcium">Calcium</option>
+        <option value="Other">Other (Type below)</option>
+      </select>
+      <input type="text" name="custom_medicine_name[]" placeholder="Type medicine name" style="display:none; margin-top:5px;">
+    </div>
+    
+    <div class="field-group">
+      <label>Dosage</label>
+      <select name="dosage[]" onchange="toggleCustomDosage(this)" required>
+        <option value="">Select Dosage</option>
+        <option value="500mg">500mg</option>
+        <option value="250mg">250mg</option>
+        <option value="100mg">100mg</option>
+        <option value="50mg">50mg</option>
+        <option value="25mg">25mg</option>
+        <option value="10mg">10mg</option>
+        <option value="5mg">5mg</option>
+        <option value="1 tablet">1 tablet</option>
+        <option value="2 tablets">2 tablets</option>
+        <option value="5ml">5ml</option>
+        <option value="10ml">10ml</option>
+        <option value="Other">Other (Type below)</option>
+      </select>
+      <input type="text" name="custom_dosage[]" placeholder="Type dosage" style="display:none; margin-top:5px;">
+    </div>
+    
+    <div class="field-group">
+      <label>Frequency</label>
+      <select name="frequency[]" required>
+        <option value="">Select Frequency</option>
+        <option value="Once daily">Once daily</option>
+        <option value="Twice daily">Twice daily</option>
+        <option value="Three times daily">Three times daily</option>
+        <option value="Four times daily">Four times daily</option>
+        <option value="Before meals">Before meals</option>
+        <option value="After meals">After meals</option>
+        <option value="At bedtime">At bedtime</option>
+        <option value="As needed">As needed</option>
+      </select>
+    </div>
+    
+    <div class="field-group">
+      <label>Days</label>
+      <select name="duration_days[]" required>
+        <option value="">Select Days</option>
+        <option value="3">3 days</option>
+        <option value="5">5 days</option>
+        <option value="7">7 days</option>
+        <option value="10">10 days</option>
+        <option value="14">14 days</option>
+        <option value="21">21 days</option>
+        <option value="30">30 days</option>
+      </select>
+    </div>
+    
+    <div class="field-group">
+      <label>Quantity</label>
+      <input name="quantity[]" type="number" min="1" placeholder="Qty" required>
+    </div>
+    
+    <div class="field-group">
+      <label>&nbsp;</label>
+      <button type="button" class="remove-btn" onclick="removeRow(this)">Remove</button>
+    </div>
+  `;
+  
+  container.appendChild(newRow);
+  updateRemoveButtons();
+}
+
+function removeRow(button) {
+  button.closest('.medicine-row').remove();
+  medicineCount--;
+  updateRemoveButtons();
+}
+
+function updateRemoveButtons() {
+  const removeButtons = document.querySelectorAll('.remove-btn');
+  removeButtons.forEach((btn, index) => {
+    btn.style.display = medicineCount > 1 ? 'block' : 'none';
+  });
+}
+
+// Initialize
+updateRemoveButtons();
+</script>
+
+</body>
+</html>

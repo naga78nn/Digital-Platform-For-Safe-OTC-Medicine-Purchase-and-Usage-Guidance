@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MediCare+ - Healthcare Management</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      
+      body {
+        font-family: Arial, sans-serif;
+        background: #f4f7fb;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+      }
+      
+      /* Header */
+      header {
+        background: #0f766e;
+        color: white;
+        padding: 15px 0;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      }
+      
+      .header-content {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      
+      .header-content h1 {
+        margin: 0;
+        font-size: 28px;
+        font-weight: bold;
+      }
+      
+      /* Main Content */
+      main {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 40px 20px;
+      }
+      
+      .landing-container {
+        text-align: center;
+        background: white;
+        padding: 50px 60px;
+        border-radius: 15px;
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.12);
+        max-width: 500px;
+        width: 100%;
+      }
+      
+      .landing-container h2 {
+        color: #0f766e;
+        margin-bottom: 15px;
+        font-size: 32px;
+        font-weight: bold;
+      }
+      
+      .landing-container p {
+        margin-bottom: 30px;
+        color: #475569;
+        font-size: 16px;
+        line-height: 1.5;
+      }
+      
+      .buttons {
+        display: flex;
+        gap: 20px;
+        justify-content: center;
+        flex-wrap: wrap;
+      }
+      
+      .buttons a {
+        display: inline-block;
+        padding: 15px 30px;
+        background: #0f766e;
+        color: white;
+        text-decoration: none;
+        border-radius: 8px;
+        font-size: 16px;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        min-width: 120px;
+      }
+      
+      .buttons a:hover {
+        background: #115e59;
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(15, 118, 110, 0.3);
+      }
+      
+      /* Footer */
+      footer {
+        background: #0f766e;
+        color: white;
+        padding: 15px 0;
+        text-align: center;
+        margin-top: auto;
+      }
+      
+      footer p {
+        margin: 0;
+        font-size: 12px;
+      }
+      
+      /* Responsive Design */
+      @media (max-width: 768px) {
+        .landing-container {
+          padding: 40px 30px;
+          margin: 20px;
+        }
+        
+        .landing-container h2 {
+          font-size: 28px;
+        }
+        
+        .buttons {
+          flex-direction: column;
+          align-items: center;
+        }
+        
+        .buttons a {
+          width: 100%;
+          max-width: 200px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Header -->
+    <header>
+      <div class="header-content">
+        <h1>🏥 MediCare+</h1>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main>
+      <div class="landing-container">
+        <h2>Welcome to Healthcare Management</h2>
+        <p>Your comprehensive solution for medical appointments, prescriptions, and pharmacy management. Choose your role to get started.</p>
+        
+        <div class="buttons">
+          <a href="/loginpage">Login</a>
+          <a href="/signup">Sign Up</a>
+        </div>
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+      <p>© 2026 Digital Health Care System | Built with ❤️ for healthcare</p>
+    </footer>
+  </body>
+</html>

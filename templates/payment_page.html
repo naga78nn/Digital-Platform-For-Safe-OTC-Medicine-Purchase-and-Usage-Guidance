@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment - Medical System</title>
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+        }
+
+        body {
+            font-family: "Segoe UI", Arial, sans-serif;
+            background: #e6f6f5;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .header {
+            background: #0f766e;
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(15, 118, 110, 0.3);
+        }
+
+        .header .logo {
+            font-size: 1.5em;
+            font-weight: bold;
+            margin: 0;
+        }
+
+        .header .back-btn {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 8px 16px;
+            border: none;
+            border-radius: 6px;
+            text-decoration: none;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        .header .back-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        main {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .payment-container {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(15, 118, 110, 0.3);
+            max-width: 450px;
+            width: 100%;
+            text-align: center;
+        }
+
+        .bill-info {
+            background: #f0fdfa;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border: 2px solid #0f766e;
+        }
+
+        .amount {
+            font-size: 2em;
+            color: #0f766e;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+
+        .qr-code {
+            width: 150px;
+            height: 150px;
+            margin: 15px auto;
+            border: 3px solid #0f766e;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(15, 118, 110, 0.2);
+        }
+
+        .payment-methods {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin: 20px 0;
+        }
+
+        .payment-btn {
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+            font-size: 13px;
+        }
+
+        .upi-btn {
+            background: #0f766e;
+            color: white;
+        }
+
+        .card-btn {
+            background: #0d5b52;
+            color: white;
+        }
+
+        .cash-btn {
+            background: #16a34a;
+            color: white;
+            grid-column: 1 / -1;
+        }
+
+        .payment-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(15, 118, 110, 0.3);
+            opacity: 0.9;
+        }
+
+        .back-btn {
+            background: #6b7280;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            text-decoration: none;
+            display: inline-block;
+            margin-top: 15px;
+            transition: all 0.3s;
+            font-size: 14px;
+        }
+
+        h2 {
+            color: #0f766e;
+            margin-bottom: 15px;
+            font-size: 1.5em;
+        }
+
+        h3 {
+            color: #0f766e;
+            margin-bottom: 10px;
+            font-size: 1.2em;
+        }
+
+        footer {
+            background: #0f766e;
+            color: white;
+            text-align: center;
+            padding: 10px 20px;
+            font-size: 12px;
+            margin-top: auto;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+
+            .payment-container {
+                padding: 20px;
+                max-width: 350px;
+            }
+
+            .amount {
+                font-size: 1.5em;
+            }
+
+            .qr-code {
+                width: 120px;
+                height: 120px;
+            }
+
+            .payment-btn {
+                padding: 10px;
+                font-size: 12px;
+            }
+
+            h2 {
+                font-size: 1.3em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="logo">MediCare+</div>
+        <a href="/patient_dashboard" class="back-btn">← Back to Dashboard</a>
+    </header>
+    
+    <main>
+        <div class="payment-container">
+            <h2>💳 Payment Gateway</h2>
+        
+        <div class="bill-info">
+            <h3>Bill Details</h3>
+            <p><strong>Bill ID:</strong> #{{ bill.bill_id }}</p>
+            <p><strong>Pharmacy:</strong> {{ bill.pharmacy_name if bill.pharmacy_name else 'Medical Store' }}</p>
+            <div class="amount">₹{{ bill.total_amount }}</div>
+        </div>
+
+        <div class="qr-code">
+            <img src="{{ url_for('static', filename='assets/scanner.jpg') }}" 
+                 alt="QR Code Scanner" 
+                 style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px;">
+        </div>
+
+        <div class="payment-methods">
+            <button class="payment-btn upi-btn" onclick="payWithUPI()">
+                📱 UPI Payment
+            </button>
+            
+            <button class="payment-btn card-btn" onclick="payWithCard()">
+                💳 Card Payment
+            </button>
+            
+            <button class="payment-btn cash-btn" onclick="payWithCash()">
+                💵 Cash Payment
+            </button>
+     
+    </main>
+
+    <script>
+        function payWithUPI() {
+            if(confirm('Proceed with UPI payment of ₹{{ bill.total_amount }}?')) {
+                processPayment('UPI');
+            }
+        }
+
+        function payWithCard() {
+            if(confirm('Proceed with Card payment of ₹{{ bill.total_amount }}?')) {
+                processPayment('Card');
+            }
+        }
+
+        function payWithCash() {
+            if(confirm('Confirm Cash payment of ₹{{ bill.total_amount }}?')) {
+                processPayment('Cash');
+            }
+        }
+
+        function processPayment(method) {
+            // Show loading
+            document.body.innerHTML = '<div style="text-align:center;padding:50px;color:#0f766e;"><h2>Processing ' + method + ' Payment...</h2><p>Please wait...</p></div>';
+            
+            // Send payment data to server
+            fetch('/confirm_payment/{{ bill.bill_id }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    payment_method: method,
+                    bill_id: {{ bill.bill_id }},
+                    amount: {{ bill.total_amount }}
+                })
+            })
+            .then(response => {
+                if (response.ok) {
+                    return response.json();
+                } else {
+                    throw new Error('Payment request failed');
+                }
+            })
+            .then(data => {
+                if (data.success) {
+                    // Show success message and redirect
+                    document.body.innerHTML = '<div style="position:fixed;top:0;left:0;width:100%;height:100%;background:#e6f6f5;display:flex;justify-content:center;align-items:center;"><div style="text-align:center;color:#059669;"><h2 style="margin:0 0 20px 0;font-size:2.5em;">✅ Payment Successful!</h2><p style="margin:0;font-size:1.3em;">Redirecting to dashboard...</p></div></div>';
+                    setTimeout(() => {
+                        window.location.href = '/patient_dashboard';
+                    }, 2000);
+                } else {
+                    throw new Error(data.message || 'Payment failed');
+                }
+            })
+            .catch(error => {
+                console.error('Payment error:', error);
+                document.body.innerHTML = '<div style="text-align:center;padding:50px;color:#dc2626;display:flex;flex-direction:column;justify-content:center;align-items:center;min-height:50vh;"><h2 style="margin:0 0 20px 0;font-size:2em;">❌ Payment Failed</h2><p style="margin:0 0 30px 0;font-size:1.1em;">' + error.message + '</p><button onclick="location.reload()" style="background:#0f766e;color:white;padding:12px 24px;border:none;border-radius:8px;cursor:pointer;font-size:16px;">Try Again</button></div>';
+            });
+        }
+    </script>
+
+    <footer>
+        <p style="margin: 0; font-size: 12px;">© 2026 Digital Health Care System | Built with ❤️ for healthcare</p>
+    </footer>
+</body>
+</html>

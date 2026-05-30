@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sign Up - MediCare+</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='login.css') }}"
+    />
+    <style>
+      .signup-container {
+        background: #fff;
+        padding: 40px 30px;
+        border-radius: 12px;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        width: 100%;
+        max-width: 500px;
+      }
+      
+      .form-group {
+        margin-bottom: 20px;
+      }
+      
+      .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: bold;
+        color: #333;
+      }
+      
+      .form-group input,
+      .form-group select {
+        width: 100%;
+        padding: 12px;
+        border: 1px solid #ddd;
+        border-radius: 6px;
+        font-size: 14px;
+        box-sizing: border-box;
+      }
+      
+      .form-group input:focus,
+      .form-group select:focus {
+        outline: none;
+        border-color: #0f766e;
+        box-shadow: 0 0 0 2px rgba(15, 118, 110, 0.1);
+      }
+      
+      .signup-btn {
+        width: 100%;
+        background: #0f766e;
+        color: white;
+        padding: 12px;
+        border: none;
+        border-radius: 6px;
+        font-size: 16px;
+        cursor: pointer;
+        margin-top: 10px;
+        transition: 0.3s;
+      }
+      
+      .signup-btn:hover {
+        background: #115e59;
+      }
+      
+      .login-link {
+        text-align: center;
+        margin-top: 20px;
+        font-size: 14px;
+        color: #475569;
+      }
+      
+      .login-link a {
+        color: #0f766e;
+        font-weight: bold;
+        text-decoration: none;
+      }
+      
+      .login-link a:hover {
+        text-decoration: underline;
+      }
+      
+      .conditional-fields {
+        display: none;
+      }
+      
+      .password-hint {
+        color: #666;
+        font-size: 12px;
+        margin-top: 5px;
+        display: block;
+      }
+      
+      .flash-messages {
+        margin-bottom: 20px;
+      }
+      
+      .flash-message {
+        background: #fef2f2;
+        color: #dc2626;
+        padding: 10px;
+        border-radius: 6px;
+        margin-bottom: 8px;
+        font-size: 14px;
+        border: 1px solid #fecaca;
+      }
+    </style>
+  </head>
+  <body>
+    {% include 'header.html' %}
+
+    <!-- Main Content -->
+    <main>
+      <div class="signup-container">
+        
+        <!-- Flash Messages -->
+        {% with messages = get_flashed_messages() %}
+          {% if messages %}
+            <div class="flash-messages">
+              {% for message in messages %}
+                <div class="flash-message">{{ message }}</div>
+              {% endfor %}
+            </div>
+          {% endif %}
+        {% endwith %}
+        
+        <h2>Sign Up</h2>
+        
+        <form method="POST" action="/signup" id="signupForm">
+          <div class="form-group">
+            <label for="role">Sign Up As</label>
+            <select id="role" name="role" required>
+              <option value="">Select Role</option>
+              <option value="Doctor">Doctor</option>
+              <option value="Patient">Patient</option>
+              <option value="Pharmacist">Pharmacist</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="name">Full Name</label>
+            <input
+              type="text"
+              id="name"
+              name="name"
+              placeholder="Enter full name"
+              required
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="email">Email</label>
+            <input 
+              type="email" 
+              id="email" 
+              name="email" 
+              placeholder="Enter email" 
+              required
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="password">Password</label>
+            <input
+              type="password"
+              id="password"
+              name="password"
+              placeholder="Min 6 chars: A-Z, a-z, 0-9, @#$%"
+              required
+              minlength="6"
+            />
+            <small class="password-hint">Password must contain: uppercase, lowercase, number, special character (@#$%)</small>
+          </div>
+
+          <div class="form-group">
+            <label for="contact">Mobile Number</label>
+            <input
+              type="tel"
+              id="contact"
+              name="contact"
+              placeholder="Enter 10-digit mobile number"
+              pattern="[0-9]{10}"
+              required
+            />
+          </div>
+
+          <!-- Patient Fields -->
+          <div id="patientFields" class="conditional-fields">
+            <div class="form-group">
+              <label for="age">Age</label>
+              <input type="number" id="age" name="age" placeholder="Enter age" min="1" max="120" />
+            </div>
+
+            <div class="form-group">
+              <label for="gender">Gender</label>
+              <select id="gender" name="gender">
+                <option value="">Select Gender</option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+                <option value="Others">Others</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Doctor Fields -->
+          <div id="doctorFields" class="conditional-fields">
+            <div class="form-group">
+              <label for="specialization">Specialization</label>
+              <select id="specialization" name="specialization" onchange="toggleCustomSpecialization()">
+                <option value="">Select Specialization</option>
+                <option value="General Medicine">General Medicine</option>
+                <option value="Cardiology">Cardiology</option>
+                <option value="Dermatology">Dermatology</option>
+                <option value="Orthopedics">Orthopedics</option>
+                <option value="Pediatrics">Pediatrics</option>
+                <option value="Gynecology">Gynecology</option>
+                <option value="Neurology">Neurology</option>
+                <option value="Psychiatry">Psychiatry</option>
+                <option value="ENT">ENT</option>
+                <option value="Ophthalmology">Ophthalmology</option>
+                <option value="Other">Other (Type your own)</option>
+              </select>
+            </div>
+            
+            <div class="form-group" id="customSpecializationField" style="display: none;">
+              <label for="custom_specialization">Enter Your Specialization</label>
+              <input
+                type="text"
+                id="custom_specialization"
+                name="custom_specialization"
+                placeholder="Enter your specialization"
+              />
+            </div>
+          </div>
+
+          <!-- Pharmacist Fields -->
+          <div id="pharmacistFields" class="conditional-fields">
+            <div class="form-group">
+              <label for="pharmacy_name">Pharmacy Name</label>
+              <input
+                type="text"
+                id="pharmacy_name"
+                name="pharmacy_name"
+                placeholder="Enter pharmacy name"
+              />
+            </div>
+          </div>
+
+          <button type="submit" class="signup-btn">Sign Up</button>
+        </form>
+
+        <p class="login-link">Already have an account? <a href="/loginpage">Login</a></p>
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <footer style="background: #0f766e; color: white; padding: 15px 0; text-align: center; margin-top: auto;">
+      <p style="margin: 0; font-size: 12px;">© 2026 Digital Health Care System | Built with ❤️ for healthcare</p>
+    </footer>
+
+    <script>
+      // Show/hide fields based on role
+      const roleSelect = document.getElementById("role");
+      const patientFields = document.getElementById("patientFields");
+      const doctorFields = document.getElementById("doctorFields");
+      const pharmacistFields = document.getElementById("pharmacistFields");
+
+      function updateFields() {
+        const role = roleSelect.value;
+        patientFields.style.display = role === "Patient" ? "block" : "none";
+        doctorFields.style.display = role === "Doctor" ? "block" : "none";
+        pharmacistFields.style.display = role === "Pharmacist" ? "block" : "none";
+        
+        // Update required fields
+        document.getElementById("age").required = role === "Patient";
+        document.getElementById("gender").required = role === "Patient";
+        document.getElementById("specialization").required = role === "Doctor";
+        document.getElementById("pharmacy_name").required = role === "Pharmacist";
+      }
+      
+      // Show/hide custom specialization field
+      function toggleCustomSpecialization() {
+        const specializationSelect = document.getElementById("specialization");
+        const customField = document.getElementById("customSpecializationField");
+        const customInput = document.getElementById("custom_specialization");
+        
+        if (specializationSelect.value === "Other") {
+          customField.style.display = "block";
+          customInput.required = true;
+        } else {
+          customField.style.display = "none";
+          customInput.required = false;
+          customInput.value = "";
+        }
+      }
+
+      roleSelect.addEventListener("change", updateFields);
+      updateFields();
+      
+      // Email lowercase conversion
+      document.getElementById("email").addEventListener("input", function() {
+        this.value = this.value.toLowerCase();
+      });
+      
+      // Password validation
+      document.getElementById("signupForm").addEventListener("submit", function(e) {
+        const password = document.getElementById("password").value;
+        const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@#$%])[A-Za-z\d@#$%]{6,}$/;
+        
+        if (!passwordRegex.test(password)) {
+          e.preventDefault();
+          alert("Password must be at least 6 characters and contain:\n- Uppercase letter (A-Z)\n- Lowercase letter (a-z)\n- Number (0-9)\n- Special character (@#$%)");
+          return false;
+        }
+      });
+    </script>
+  </body>
+</html>

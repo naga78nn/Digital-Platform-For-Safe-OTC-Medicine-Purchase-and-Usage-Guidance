@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Verify OTP - Clinic Management</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='login.css') }}"
+    />
+  </head>
+  <body>
+    <main>
+      <div class="login-container">
+        <div style="margin-bottom: 20px;">
+          <button onclick="history.back()" style="background: #6b7280; color: white; padding: 10px 20px; border: none; border-radius: 6px; cursor: pointer; font-size: 14px;">← Back</button>
+        </div>
+      
+      <h2>Verify OTP</h2>
+
+      {% with messages = get_flashed_messages() %}
+        {% if messages %}
+          <div class="flash-messages">
+            {% for message in messages %}
+              <div class="flash-message">{{ message }}</div>
+            {% endfor %}
+          </div>
+        {% endif %}
+      {% endwith %}
+
+      <form method="POST" action="/verify_otp" onsubmit="return validatePasswordReset()">
+        <label for="otp">Enter OTP</label>
+        <input
+          type="number"
+          id="otp"
+          name="otp"
+          placeholder="Enter 6-digit OTP"
+          required
+          maxlength="6"
+        />
+
+        <label for="new_password">New Password</label>
+        <input
+          type="password"
+          id="new_password"
+          name="new_password"
+          placeholder="Enter new password (min 6 chars, A-z, 0-9, @#$%)"
+          required
+          minlength="6"
+        />
+
+        <label for="confirm_password">Confirm Password</label>
+        <input
+          type="password"
+          id="confirm_password"
+          name="confirm_password"
+          placeholder="Confirm new password"
+          required
+          minlength="6"
+        />
+
+        <button type="submit">Reset Password</button>
+      </form>
+
+      <p class="signup-text">
+        <a href="/forgot_password">← Back to Email Verification</a>
+      </p>
+    </div>
+
+    <script>
+      function validatePasswordReset() {
+        const newPassword = document.getElementById('new_password').value;
+        const confirmPassword = document.getElementById('confirm_password').value;
+        
+        // Password validation: min 6 chars, uppercase, lowercase, number, special char
+        const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@#$%]).{6,}$/;
+        
+        if (!passwordRegex.test(newPassword)) {
+          alert('Password must be at least 6 characters with uppercase, lowercase, number, and special character (@#$%)');
+          return false;
+        }
+        
+        if (newPassword !== confirmPassword) {
+          alert('Passwords do not match!');
+          return false;
+        }
+        
+        return true;
+      }
+    </script>
+      </div>
+    </main>
+
+    <footer style="background: #0f766e; color: white; padding: 15px 0; text-align: center; margin-top: auto;">
+      <p style="margin: 0; font-size: 12px;">© 2026 Digital Health Care System | Built with ❤️ for healthcare</p>
+    </footer>
+  </body>
+</html>

@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Patient Dashboard</title>
+
+    <style>
+      html, body {
+        height: 100%;
+        margin: 0;
+      }
+
+      body {
+        display: flex;
+        flex-direction: column;
+        font-family: Arial, sans-serif;
+        background: #f4f7fb;
+      }
+
+      main {
+        flex: 1;
+        padding: 20px;
+      }
+
+      /* TOP NAVBAR */
+      .header {
+        background: #0f766e;
+        color: white;
+        padding: 15px 30px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+      }
+      
+      .header h1 {
+        margin: 0;
+        font-size: 24px;
+      }
+      
+      .back-btn {
+        background: #6b7280;
+        color: white;
+        padding: 8px 16px;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        text-decoration: none;
+        font-size: 14px;
+      }
+      
+      .back-btn:hover {
+        background: #4b5563;
+      }
+      
+      .top-bar {
+        background: #0f766e;
+        color: white;
+        padding: 14px 30px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .logout-btn {
+        background: #dc2626;
+        padding: 8px 14px;
+        border-radius: 8px;
+        text-decoration: none;
+        color: white;
+        font-weight: bold;
+      }
+
+      /* BUTTONS */
+      .btn {
+        background: #0f766e;
+        color: white;
+        border: none;
+        padding: 10px 16px;
+        border-radius: 8px;
+        cursor: pointer;
+        margin: 5px;
+        font-size: 14px;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: inline-block;
+      }
+
+      .btn:hover {
+        background: #0d5f56;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+      }
+
+      .nav-buttons {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-bottom: 25px;
+        justify-content: center;
+      }
+
+      /* CARD */
+      .card-section {
+        background: #fff;
+        padding: 25px;
+        border-radius: 12px;
+        margin-bottom: 25px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        display: none;
+      }
+
+      .card-section h2 {
+        color: #0f766e;
+        margin-bottom: 20px;
+        font-size: 22px;
+        border-bottom: 2px solid #e5e7eb;
+        padding-bottom: 10px;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 15px;
+        background: white;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+      }
+
+      thead {
+        background: #0f766e;
+        color: white;
+      }
+
+      th, td {
+        padding: 12px 15px;
+        text-align: left;
+        border-bottom: 1px solid #e5e7eb;
+      }
+
+      tbody tr:hover {
+        background: #f0fdfa;
+      }
+
+      tbody tr:nth-child(even) {
+        background: #f9fafb;
+      }
+
+      tbody tr:nth-child(even):hover {
+        background: #f0fdfa;
+      }
+
+      .status {
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+      
+      .status.Pending { 
+        background: #fef3c7; 
+        color: #d97706; 
+      }
+      
+      .status.Approved { 
+        background: #d1fae5; 
+        color: #059669; 
+      }
+      
+      .status.Completed { 
+        background: #dbeafe; 
+        color: #2563eb; 
+      }
+      
+      .status.Rejected { 
+        background: #fee2e2; 
+        color: #dc2626; 
+      }
+
+      .bill-card {
+        background: #f9fafb;
+        padding: 15px;
+        border-radius: 10px;
+        margin-bottom: 15px;
+      }
+
+      footer {
+        background: #0f766e;
+        color: white;
+        text-align: center;
+        padding: 10px 20px;
+        font-size: 12px;
+      }
+
+      /* Profile Dropdown */
+      .profile-dropdown {
+        background: #fff;
+        color: #0f766e;
+        padding: 8px 15px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: bold;
+        user-select: none;
+      }
+
+      .dropdown-content {
+        display: none;
+        position: absolute;
+        right: 0;
+        background: white;
+        min-width: 250px;
+        box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+        border-radius: 8px;
+        z-index: 1000;
+        margin-top: 5px;
+        padding: 15px;
+      }
+
+      .dropdown-content.show {
+        display: block;
+      }
+
+      .profile-info {
+        padding: 10px 0;
+        color: #333;
+      }
+
+      .logout-link {
+        color: #dc2626;
+        text-decoration: none;
+        font-weight: bold;
+        display: block;
+        padding: 8px 0;
+      }
+
+      .logout-link:hover {
+        background: #f5f5f5;
+        padding: 8px;
+        border-radius: 4px;
+      }
+
+      /* Mobile Responsive */
+      @media (max-width: 768px) {
+        .top-bar {
+          padding: 10px 15px;
+        }
+
+        main {
+          padding: 15px;
+        }
+
+        .card-section {
+          padding: 15px;
+        }
+
+        .btn {
+          padding: 6px 10px;
+          font-size: 12px;
+        }
+
+        table {
+          font-size: 12px;
+        }
+
+        th, td {
+          padding: 8px 4px;
+        }
+
+        .bill-card {
+          padding: 12px;
+        }
+
+        .dropdown-content {
+          min-width: 200px;
+          right: -30px;
+        }
+      }
+
+      /* Flash Message Animation */
+      @keyframes slideIn {
+        from {
+          opacity: 0;
+          transform: translateY(-20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      @keyframes slideOut {
+        from {
+          opacity: 1;
+          transform: translateY(0);
+        }
+        to {
+          opacity: 0;
+          transform: translateY(-20px);
+        }
+      }
+
+      .flash-message {
+        transition: all 0.3s ease;
+      }
+    </style>
+  </head>
+
+  <body>
+
+    <!-- TOP BAR -->
+    <div class="top-bar">
+      <h2>Patient Dashboard</h2>
+
+      <div style="position: relative;">
+        <div class="profile-dropdown" onclick="toggleDropdown()">
+          <span>👤 {{ profile.patient_name }}</span>
+          <span style="margin-left: 5px;">▼</span>
+        </div>
+        
+        <div id="dropdown" class="dropdown-content">
+          <div class="profile-info">
+            <strong>{{ profile.patient_name }}</strong><br>
+            <small>{{ profile.email }}</small><br>
+            <small>Age: {{ profile.age }} | {{ profile.gender }}</small><br>
+            <small>Mobile: {{ profile.mobile_number }}</small>
+          </div>
+          <hr>
+          <a href="{{ url_for('logout') }}" class="logout-link">🚪 Logout</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <main>
+
+      <!-- SUCCESS MESSAGES -->
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          {% for category, message in messages %}
+            <div id="flash-message" class="flash-message {{ category }}" style="
+              background: {% if category == 'success' %}#d1fae5{% elif category == 'danger' %}#fee2e2{% else %}#dbeafe{% endif %}; 
+              color: {% if category == 'success' %}#065f46{% elif category == 'danger' %}#dc2626{% else %}#1e40af{% endif %}; 
+              padding: 12px 18px; 
+              border-radius: 8px; 
+              margin-bottom: 20px; 
+              border: 1px solid {% if category == 'success' %}#10b981{% elif category == 'danger' %}#f87171{% else %}#3b82f6{% endif %};
+              position: relative;
+              animation: slideIn 0.3s ease-out;
+            ">
+              {% if category == 'success' %}✅{% elif category == 'danger' %}❌{% else %}ℹ️{% endif %} {{ message }}
+              <button onclick="closeFlash()" style="
+                position: absolute;
+                right: 10px;
+                top: 50%;
+                transform: translateY(-50%);
+                background: none;
+                border: none;
+                font-size: 18px;
+                cursor: pointer;
+                color: inherit;
+              ">×</button>
+            </div>
+          {% endfor %}
+        {% endif %}
+      {% endwith %}
+
+      <!-- QUICK NAV BUTTONS -->
+      <section class="nav-buttons">
+        <button class="btn" onclick="showSection('book-appointment')">📅 Book Appointment</button>
+        <button class="btn" onclick="showSection('my-appointments-section')">📋 My Appointments</button>
+        <button class="btn" onclick="showSection('prescriptions')">💊 Prescriptions</button>
+        <button class="btn" onclick="showSection('pharmacies-section')">🏪 Pharmacies</button>
+        <button class="btn" onclick="showSection('my-orders-section')">📦 My Orders</button>
+      </section>
+
+      <!-- BOOK APPOINTMENT -->
+      <section id="book-appointment" class="card-section">
+        <h2>Book Doctor Appointment</h2>
+
+        <div style="display:flex; flex-direction:column; gap:15px;">
+
+          {% for doctor in doctors %}
+          <form method="POST" action="/book_appointment"
+                style="display:flex;
+                       align-items:center;
+                       justify-content:space-between;
+                       gap:20px;
+                       padding:15px;
+                       background:white;
+                       border-radius:10px;
+                       box-shadow:0 3px 8px rgba(0,0,0,0.12);">
+
+            <div style="flex:1;">
+              <b style="font-size:17px;">Dr. {{ doctor.doctor_name }}</b><br>
+              <span style="color:#555;">{{ doctor.specialization }}</span>
+            </div>
+
+            <input type="hidden" name="doctor_id" value="{{ doctor.doctor_id }}">
+
+            <div>
+              <input type="date" 
+                     name="appointment_date" 
+                     required
+                     min="{{ current_date }}"
+                     style="padding:8px; border-radius:6px; border:1px solid #ccc;">
+            </div>
+
+            <div>
+              <button class="btn" style="padding:8px 18px;">Book</button>
+            </div>
+
+          </form>
+          {% endfor %}
+
+        </div>
+      </section>
+
+      <!-- MY APPOINTMENTS -->
+      <section id="my-appointments-section" class="card-section">
+        <h2>📋 My Appointments</h2>
+
+        {% if my_appointments %}
+        <div style="overflow-x: auto;">
+          <table>
+            <thead>
+              <tr>
+                <th>Doctor</th>
+                <th>Specialization</th>
+                <th>Date</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for a in my_appointments %}
+              <tr>
+                <td><strong>Dr. {{ a.doctor_name }}</strong></td>
+                <td>{{ a.specialization or 'General' }}</td>
+                <td>{{ a.appointment_date }}</td>
+                <td>
+                  <span class="status {{ a.status }}">{{ a.status }}</span>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        {% else %}
+        <div style="text-align: center; padding: 40px; color: #6b7280;">
+          <p style="font-size: 16px; margin: 0;">📅 No appointments booked yet.</p>
+          <p style="font-size: 14px; margin: 10px 0 0 0;">Book your first appointment with a doctor!</p>
+        </div>
+        {% endif %}
+      </section>
+
+      <!-- PRESCRIPTIONS -->
+      <section id="prescriptions" class="card-section">
+        <h2>My Prescriptions</h2>
+
+        {% if prescriptions %}
+          {% for p in prescriptions %}
+            <p><b>Date:</b> {{ p.created_at }}</p>
+            <p><b>Diagnosis:</b> {{ p.diagnosis }}</p>
+
+            <a href="{{ url_for('view_prescription', prescription_id=p.prescription_id) }}">
+              <button class="btn">View</button>
+            </a>
+
+            <hr>
+          {% endfor %}
+        {% else %}
+          <p>No prescriptions found.</p>
+        {% endif %}
+      </section>
+
+      <!-- PHARMACY LIST -->
+      <section id="pharmacies-section" class="card-section">
+        <h2>Available Pharmacies</h2>
+
+        {% if pharmacies %}
+          {% for ph in pharmacies %}
+            <form method="POST" action="{{ url_for('book_medicine') }}">
+              <p><b>{{ ph.pharmacy_name }}</b> - {{ ph.pharmacist_name }}</p>
+
+              <input type="hidden" name="pharmacist_id" value="{{ ph.pharmacist_id }}">
+              <input type="text" name="delivery_address" placeholder="Enter delivery address" required>
+
+              <button class="btn">Order Medicines</button>
+            </form>
+            <hr>
+          {% endfor %}
+        {% else %}
+          <p>No pharmacies found.</p>
+        {% endif %}
+      </section>
+
+      <!-- ORDERS & BILLS -->
+      <section id="my-orders-section" class="card-section">
+        <h2>My Orders</h2>
+
+        {% if orders %}
+        <table>
+          <thead>
+            <tr>
+              <th>Pharmacy</th>
+              <th>Address</th>
+              <th>Status</th>
+              <th>Date</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            {% for o in orders %}
+            <tr>
+              <td>{{ o.pharmacy_name }}</td>
+              <td>{{ o.delivery_address }}</td>
+              <td>
+                <span class="status {{ o.status }}">{{ o.status }}</span>
+              </td>
+              <td>{{ o.created_at }}</td>
+              <td>
+                {% if o.status == "Pending" %}
+                  <form method="POST" 
+                        action="{{ url_for('cancel_order', order_id=o.order_id) }}"
+                        onsubmit="return confirm('Cancel this order?');">
+                    <button class="btn" style="background:red;">Cancel</button>
+                  </form>
+                {% elif o.status == "Completed" %}
+                  <span class="status Completed">✓ Delivered</span>
+                {% elif o.payment_status == "Paid" %}
+                  <span class="status" style="background: #dbeafe; color: #2563eb;">🚚 In Transit</span>
+                {% else %}
+                  <span class="status Pending">⏳ Processing</span>
+                {% endif %}
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        {% else %}
+          <p>No orders placed yet.</p>
+        {% endif %}
+
+<h3>Your Bills</h3>
+
+{% if bills %}
+  {% for b in bills %}
+    <div class="bill-card">
+      <p><b>Pharmacy:</b> {{ b.pharmacy_name }}</p>
+      <p><b>Total:</b> ₹{{ b.total_amount }}</p>
+      <p><b>Date:</b> {{ b.created_at }}</p>
+      <p><b>Status:</b> {{ b.payment_status }}</p>
+
+      <!-- VIEW BILL -->
+      <a href="{{ url_for('view_bill', bill_id=b.bill_id) }}">
+        <button class="btn" style="background:#0ea5e9;">View Bill</button>
+      </a>
+
+      <!-- PAY BUTTON -->
+      {% if b.payment_status == "Pending" %}
+        <form method="POST" action="{{ url_for('pay_bill', bill_id=b.bill_id) }}" style="display:inline;">
+          <button class="btn" style="background:#16a34a;">Pay Now</button>
+        </form>
+      {% else %}
+        <button class="btn" style="background:gray;" disabled>Paid</button>
+        <a href="{{ url_for('download_receipt', bill_id=b.bill_id) }}">
+          <button class="btn" style="background:#0ea5e9;">Download Receipt</button>
+        </a>
+      {% endif %}
+    </div>
+  {% endfor %}
+{% else %}
+  <p>No bills available.</p>
+{% endif %}
+
+      </section>
+
+    </main>
+
+    <script>
+      function showSection(id) {
+        document.querySelectorAll(".card-section").forEach(sec => sec.style.display = "none");
+        document.getElementById(id).style.display = "block";
+      }
+
+      function toggleDropdown() {
+        document.getElementById("dropdown").classList.toggle("show");
+      }
+
+      // Close dropdown when clicking outside
+      window.onclick = function(event) {
+        if (!event.target.matches('.profile-dropdown') && !event.target.matches('.profile-dropdown *')) {
+          var dropdown = document.getElementById("dropdown");
+          if (dropdown.classList.contains('show')) {
+            dropdown.classList.remove('show');
+          }
+        }
+      }
+      // Show default section on load
+      document.addEventListener('DOMContentLoaded', function() {
+        showSection('book-appointment');
+        
+        // Auto-hide flash messages after 5 seconds
+        const flashMessage = document.getElementById('flash-message');
+        if (flashMessage) {
+          setTimeout(() => {
+            flashMessage.style.animation = 'slideOut 0.3s ease-out';
+            setTimeout(() => {
+              flashMessage.remove();
+            }, 300);
+          }, 5000);
+        }
+      });
+      
+      function closeFlash() {
+        const flashMessage = document.getElementById('flash-message');
+        if (flashMessage) {
+          flashMessage.style.animation = 'slideOut 0.3s ease-out';
+          setTimeout(() => {
+            flashMessage.remove();
+          }, 300);
+        }
+      }
+    </script>
+
+    <footer>
+      <p style="margin: 0; font-size: 12px;">© 2026 Digital Health Care System | Built with ❤️ for healthcare</p>
+    </footer>
+
+  </body>
+</html>

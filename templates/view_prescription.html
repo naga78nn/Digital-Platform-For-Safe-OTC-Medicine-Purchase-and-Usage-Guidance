@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Prescription Details</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='dashboard.css') }}"
+    />
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background: #f4f7fb;
+        margin: 0;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+      }
+
+      /* HEADER */
+      .header {
+        background: #0f766e;
+        color: white;
+        padding: 15px 30px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      
+      .header h1 {
+        margin: 0;
+        font-size: 24px;
+      }
+      
+      .back-btn {
+        background: #0f766e;
+        color: white;
+        padding: 8px 16px;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        text-decoration: none;
+        font-size: 14px;
+      }
+      
+      .back-btn:hover {
+        background: #0d5a52;
+      }
+
+      /* MAIN CONTENT */
+      main {
+        flex: 1;
+        padding: 20px;
+      }
+
+      /* FOOTER */
+      footer {
+        background: #0f766e;
+        color: white;
+        text-align: center;
+        padding: 10px 20px;
+        font-size: 12px;
+      }
+      .container {
+        max-width: 900px;
+        margin: 0 auto;
+        background: #fff;
+        padding: 25px;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      }
+      
+      h2 {
+        color: #0f766e;
+        margin-bottom: 20px;
+        font-size: 22px;
+        border-bottom: 2px solid #e5e7eb;
+        padding-bottom: 10px;
+      }
+      
+      h3 {
+        color: #0f766e;
+        margin-bottom: 15px;
+        font-size: 18px;
+      }
+      
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 15px;
+        background: white;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+      }
+      
+      thead {
+        background: #0f766e;
+        color: white;
+      }
+      
+      th, td {
+        padding: 12px 15px;
+        text-align: left;
+        border-bottom: 1px solid #e5e7eb;
+      }
+      
+      tbody tr:hover {
+        background: #f0fdfa;
+      }
+      
+      tbody tr:nth-child(even) {
+        background: #f9fafb;
+      }
+      
+      tbody tr:nth-child(even):hover {
+        background: #f0fdfa;
+      }
+      
+      section {
+        margin-bottom: 25px;
+        padding: 15px;
+        background: #f8fafc;
+        border-radius: 8px;
+        border-left: 4px solid #0f766e;
+      }
+      
+      section p {
+        margin: 8px 0;
+        font-size: 14px;
+        line-height: 1.5;
+      }
+      a.btn {
+        padding: 6px 12px;
+        border-radius: 5px;
+        background: #22c55e;
+        color: white;
+        text-decoration: none;
+      }
+      a.btn:hover {
+        background: #16a34a;
+      }
+    </style>
+  </head>
+  <body>
+
+    <!-- HEADER -->
+    <div class="header">
+      <h1>💊 Prescription Details</h1>
+      <a href="{{ url_for('patient_dashboard') }}" class="back-btn">← Back to Dashboard</a>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <main>
+
+    <div class="container">
+      <h2>Prescription Details</h2>
+
+      <!-- Patient & Diagnosis Info -->
+      {% if prescription %}
+      <section>
+        <p><b>Patient:</b> {{ prescription.patient_name }}</p>
+        <p><b>Doctor:</b> Dr. {{ prescription.doctor_name }}</p>
+        <p><b>Diagnosis:</b> {{ prescription.diagnosis }}</p>
+        <p><b>Notes:</b> {{ prescription.notes }}</p>
+        <p><b>Date:</b> {{ prescription.created_at }}</p>
+      </section>
+      {% endif %}
+
+      <!-- Medications Table -->
+      <section>
+        <h3>Medications</h3>
+        {% if items %}
+        <table>
+          <thead>
+            <tr>
+              <th>Medicine</th>
+              <th>Dosage</th>
+              <th>Frequency</th>
+              <th>Duration</th>
+              <th>Quantity</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for m in items %}
+            <tr>
+              <td>{{ m.medicine_name }}</td>
+              <td>{{ m.dosage }}</td>
+              <td>{{ m.frequency }}</td>
+              <td>{{ m.duration_days }} days</td>
+              <td>{{ m.quantity }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        {% else %}
+        <p>No medications added for this prescription.</p>
+        {% endif %}
+      </section>
+    </div>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer>
+      <p style="margin: 0;">© 2026 Digital Health Care System | Built with ❤️ for healthcare</p>
+    </footer>
+
+  </body>
+</html>

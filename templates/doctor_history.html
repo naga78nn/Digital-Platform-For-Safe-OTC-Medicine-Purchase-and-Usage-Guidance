@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Prescription History</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: #f4f6f8;
+            color: #1f2937;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* TOP BAR */
+        .top-bar {
+            background: #0f766e;
+            color: white;
+            padding: 14px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .top-bar h2 {
+            font-size: 22px;
+        }
+
+        .back-btn {
+            background: #2563eb;
+            padding: 8px 16px;
+            color: white;
+            border-radius: 6px;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        main {
+            padding: 25px;
+            flex: 1;
+        }
+
+        .history-section {
+            background: white;
+            padding: 22px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+
+        .history-section h2 {
+            margin-bottom: 18px;
+            color: #0f766e;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead {
+            background: #0f766e;
+            color: white;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: center;
+            border-bottom: 1px solid #e5e7eb;
+            font-size: 14px;
+        }
+
+        tbody tr:hover {
+            background: #ecfdf5;
+        }
+
+        .view-btn {
+            background: #1e40af;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-size: 13px;
+        }
+
+        footer {
+            background: #0f766e;
+            color: #e5e7eb;
+            padding: 25px;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        footer p {
+            font-size: 13px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- TOP BAR -->
+    <div class="top-bar">
+        <h2>Prescription History</h2>
+        <a href="{{ url_for('doctor_dashboard') }}" class="back-btn">⬅ Back to Dashboard</a>
+    </div>
+
+    <!-- MAIN -->
+    <main>
+        <section class="history-section">
+            <h2>Prescription History</h2>
+
+            {% if history %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>Prescription ID</th>
+                        <th>Patient Name</th>
+                        <th>Appointment Date</th>
+                        <th>Prescribed Date</th>
+                        <th>Diagnosis</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for item in history %}
+                    <tr>
+                        <td>{{ item.prescription_id }}</td>
+                        <td>{{ item.patient_name }}</td>
+                        <td>{{ item.appointment_date }}</td>
+                        <td>{{ item.prescribed_at.strftime('%Y-%m-%d %H:%M') if item.prescribed_at else 'N/A' }}</td>
+                        <td>{{ item.diagnosis or 'N/A' }}</td>
+                        <td>
+                            {% if item.prescription_id %}
+                            <a href="{{ url_for('view_prescription', prescription_id=item.prescription_id) }}" class="view-btn">👁️ View</a>
+                            <a href="{{ url_for('edit_prescription', prescription_id=item.prescription_id) }}" class="view-btn" style="background:#f59e0b;">✏️ Edit</a>
+                            {% else %}
+                            <span style="color:gray;">No Prescription</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+            {% else %}
+            <p>No prescription history found.</p>
+            {% endif %}
+        </section>
+    </main>
+
+    <footer style="background: #0f766e; color: white; padding: 15px 0; text-align: center; margin-top: auto;">
+      <p style="margin: 0; font-size: 12px;">© 2026 Digital Health Care System | Built with ❤️ for healthcare</p>
+    </footer>
+
+</body>
+</html>

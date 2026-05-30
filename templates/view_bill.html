@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bill</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f7fb;
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* HEADER */
+    .header {
+      background: #0f766e;
+      color: white;
+      padding: 15px 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .header h1 {
+      margin: 0;
+      font-size: 24px;
+    }
+    
+    .back-btn {
+      background: #6b7280;
+      color: white;
+      padding: 8px 16px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      text-decoration: none;
+      font-size: 14px;
+    }
+    
+    .back-btn:hover {
+      background: #4b5563;
+    }
+
+    /* MAIN CONTENT */
+    main {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    /* FOOTER */
+    footer {
+      background: #0f766e;
+      color: white;
+      text-align: center;
+      padding: 10px 20px;
+      font-size: 12px;
+    }
+
+    .bill-container {
+      background: white;
+      padding: 20px 30px;
+      border: 2px solid #0f766e;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      max-width: 500px;
+      width: 100%;
+    }
+
+    h2 {
+      text-align: center;
+      color: #0f766e;
+      margin-bottom: 20px;
+    }
+
+    p {
+      margin: 5px 0;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 15px;
+    }
+
+    th, td {
+      border: 1px solid #ccc;
+      padding: 8px;
+      text-align: left;
+    }
+
+    th {
+      background-color: #0f766e;
+      color: white;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <div class="header">
+    <h1>🧾 View Bill</h1>
+    <a href="/patient_dashboard" class="back-btn">← Back to Dashboard</a>
+  </div>
+
+  <!-- MAIN CONTENT -->
+  <main>
+
+  <div class="bill-container">
+    <div style="text-align: center; border-bottom: 2px solid #0f766e; padding-bottom: 15px; margin-bottom: 20px;">
+      <h2 style="margin: 0; color: #0f766e; font-size: 24px;">🏪 {{ bill.pharmacy_name }}</h2>
+      <p style="margin: 5px 0; color: #666; font-size: 14px;">Licensed Medical Store</p>
+      <p style="margin: 0; color: #666; font-size: 12px;">Medical Bill Receipt</p>
+    </div>
+
+    <div style="display: flex; justify-content: space-between; margin-bottom: 15px;">
+      <div>
+        <p><b>Bill No:</b> #{{ "%04d"|format(bill.bill_id) }}</p>
+        <p><b>Date:</b> {{ bill.created_at.strftime('%d/%m/%Y') if bill.created_at else 'N/A' }}</p>
+      </div>
+      <div style="text-align: right;">
+        <p><b>Patient:</b> {{ bill.patient_name }}</p>
+        <p><b>Status:</b> <span style="color: green; font-weight: bold;">✓ {{ bill.payment_status }}</span></p>
+      </div>
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Medicine</th>
+          <th>Qty</th>
+          <th>Rate</th>
+          <th>Amount</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for i in items %}
+        <tr>
+          <td>{{ i.medicine_name }}</td>
+          <td>{{ i.quantity }}</td>
+          <td>₹{{ "%.2f"|format(i.price) }}</td>
+          <td>₹{{ "%.2f"|format(i.amount) }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+      <tfoot>
+        <tr style="border-top: 2px solid #0f766e; font-weight: bold;">
+          <td colspan="3" style="text-align: right; background: #f0fdfa;">TOTAL:</td>
+          <td style="background: #f0fdfa; color: #0f766e; font-size: 16px;">₹{{ "%.2f"|format(bill.total_amount) }}</td>
+        </tr>
+      </tfoot>
+    </table>
+
+    <div style="text-align: center; margin-top: 20px; padding-top: 15px; border-top: 1px solid #ddd;">
+      <p style="color: #0f766e; font-weight: bold; margin: 5px 0;">Thank you for choosing our pharmacy!</p>
+      <p style="color: #666; font-size: 12px; margin: 0;">Get well soon! 💊</p>
+    </div>
+  </div>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer>
+    <p style="margin: 0;">© 2026 Digital Health Care System | Built with ❤️ for healthcare</p>
+  </footer>
+
+</body>
+</html>

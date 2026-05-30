@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Prescription</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: #f4f6f8;
+            color: #1f2937;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .top-bar {
+            background: #0f766e;
+            color: white;
+            padding: 14px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .back-btn {
+            background: #2563eb;
+            padding: 8px 16px;
+            color: white;
+            border-radius: 6px;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        main {
+            padding: 25px;
+            flex: 1;
+        }
+
+        .form-section {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #0f766e;
+        }
+
+        input, textarea, select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: #0f766e;
+            box-shadow: 0 0 0 2px rgba(15, 118, 110, 0.1);
+        }
+
+        .medicine-item {
+            background: #f0fdfa;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            border: 1px solid #5eead4;
+            transition: box-shadow 0.3s;
+        }
+
+        .medicine-item:hover {
+            box-shadow: 0 4px 12px rgba(15, 118, 110, 0.1);
+        }
+
+        .btn {
+            background: #0f766e;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-right: 10px;
+        }
+
+        .btn:hover {
+            background: #0d5b54;
+        }
+
+        .btn-add {
+            background: #16a34a;
+        }
+
+        .btn-add:hover {
+            background: #15803d;
+        }
+
+        .btn-remove {
+            background: #dc2626;
+            padding: 5px 10px;
+            font-size: 12px;
+        }
+
+        .btn-remove:hover {
+            background: #b91c1c;
+        }
+
+        .medicine-row {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr 1fr auto;
+            gap: 10px;
+            align-items: end;
+        }
+
+        footer {
+            background: #0f766e;
+            color: #e5e7eb;
+            padding: 25px;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        footer p {
+            font-size: 13px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="top-bar">
+        <h2>📝 Edit Prescription</h2>
+        <a href="{{ url_for('doctor_history') }}" class="back-btn">⬅ Back to History</a>
+    </div>
+
+    <main>
+        <div class="form-section">
+            <h3>Patient: {{ prescription.patient_name }}</h3>
+            <p>Date: {{ prescription.appointment_date }}</p>
+            <hr style="margin: 15px 0;">
+
+            <form method="POST">
+                <div class="form-group">
+                    <label>Diagnosis:</label>
+                    <textarea name="diagnosis" rows="3" required>{{ prescription.diagnosis }}</textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>Notes:</label>
+                    <textarea name="notes" rows="2">{{ prescription.notes }}</textarea>
+                </div>
+
+                <h4>Medicines:</h4>
+                <div id="medicines-container">
+                    {% for item in items %}
+                    <div class="medicine-item">
+                        <div class="medicine-row">
+                            <input type="text" name="medicine_name[]" placeholder="Medicine Name" value="{{ item.medicine_name }}" required>
+                            <input type="text" name="dosage[]" placeholder="Dosage" value="{{ item.dosage }}">
+                            <input type="text" name="frequency[]" placeholder="Frequency" value="{{ item.frequency }}">
+                            <input type="number" name="duration_days[]" placeholder="Days" value="{{ item.duration_days }}">
+                            <input type="number" name="quantity[]" placeholder="Qty" value="{{ item.quantity }}">
+                            <button type="button" class="btn btn-remove" onclick="removeMedicine(this)">Remove</button>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+
+                <button type="button" class="btn btn-add" onclick="addMedicine()">+ Add Medicine</button>
+                <br><br>
+                <button type="submit" class="btn">💾 Update Prescription</button>
+            </form>
+        </div>
+    </main>
+
+    <footer style="background: #0f766e; color: white; padding: 15px 0; text-align: center; margin-top: auto;">
+      <p style="margin: 0; font-size: 12px;">© 2026 Digital Health Care System | Built with ❤️ for healthcare</p>
+    </footer>
+
+    <script>
+        function addMedicine() {
+            const container = document.getElementById('medicines-container');
+            const div = document.createElement('div');
+            div.className = 'medicine-item';
+            div.innerHTML = `
+                <div class="medicine-row">
+                    <input type="text" name="medicine_name[]" placeholder="Medicine Name" required>
+                    <input type="text" name="dosage[]" placeholder="Dosage">
+                    <input type="text" name="frequency[]" placeholder="Frequency">
+                    <input type="number" name="duration_days[]" placeholder="Days">
+                    <input type="number" name="quantity[]" placeholder="Qty">
+                    <button type="button" class="btn btn-remove" onclick="removeMedicine(this)">Remove</button>
+                </div>
+            `;
+            container.appendChild(div);
+        }
+
+        function removeMedicine(btn) {
+            btn.closest('.medicine-item').remove();
+        }
+    </script>
+</body>
+</html>

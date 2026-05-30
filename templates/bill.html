@@ -1,0 +1,23 @@
+<h2>Medical Bill</h2>
+
+<table border="1" cellpadding="10">
+<tr>
+  <th>Medicine</th>
+  <th>Qty</th>
+  <th>Price</th>
+  <th>Amount</th>
+</tr>
+
+{% for b in bill_items %}
+<tr>
+  <td>{{ b.name }}</td>
+  <td>{{ b.qty }}</td>
+  <td>₹{{ b.price }}</td>
+  <td>₹{{ b.amount }}</td>
+</tr>
+{% endfor %}
+</table>
+
+<h3>Total Amount: ₹{{ total }}</h3>
+
+<button onclick="window.print()">Print Bill</button>
